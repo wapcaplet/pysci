@@ -5,6 +5,36 @@
 
 from PyQt4 import Qsci
 
+class BadEnum (Exception):
+    """Bad (unknown or failed) enumeration name.
+    """
+    def __init__(self, name):
+        super(BadEnum, self).__init__("Enumeration name unknown: '%s'" % name)
+
+
+def enum_value(name):
+    """Return the Qsci.QsciScintilla value for the given enumeration name.
+    """
+    if name not in _enums:
+        raise BadEnum(name)
+    else:
+        # Some officially documented enums don't work; catch them
+        # and raise BadEnum instead of KeyError
+        try:
+            return Qsci.QsciScintilla.__dict__[name]
+        except KeyError:
+            raise BadEnum(name)
+
+
+def enum_help(name):
+    """Return help text on the given enumeration name.
+    """
+    try:
+        return _enums[name]
+    except KeyError:
+        raise BadEnum(name)
+
+
 # Enumerations
 _enums = {
     # auto-indentation styles
@@ -305,24 +335,5 @@ _enums = {
         """ Wrapped sub-lines are indented by the same amount as the first
         sub-line plus one more level of indentation.""",
 }
-
-class BadEnum (Exception):
-    """Bad (unknown or failed) enumeration name.
-    """
-    def __init__(self, name):
-        super(BadEnum, self).__init__("Enumeration name unknown: '%s'" % name)
-
-def enum_value(name):
-    """Return the Qsci.QsciScintilla value for the given enumeration name.
-    """
-    if name not in _enums:
-        raise BadEnum(name)
-    else:
-        # Some officially documented enums don't work; catch them
-        # and raise BadEnum instead of KeyError
-        try:
-            return Qsci.QsciScintilla.__dict__[name]
-        except KeyError:
-            raise BadEnum(name)
 
 
