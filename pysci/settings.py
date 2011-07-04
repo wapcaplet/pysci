@@ -1,5 +1,8 @@
 # settings.py
 
+"""Configuration settings for QSciScintilla widgets.
+"""
+
 from PyQt4 import Qsci, QtGui
 
 _default_config = {

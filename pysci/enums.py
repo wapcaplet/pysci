@@ -1,4 +1,4 @@
-# enms.py
+# enums.py
 
 """Wrapper for Qsci.QsciScintilla enumerations.
 """
@@ -45,11 +45,13 @@ _enums = {
         """If the language supported by the current lexer has a specific start
         of block character (e.g. { in C++), then a line that begins with that
         character is indented as well as the lines that make up the block. It
-        may be logically ored with AiClosing.""", 'AiClosing': """If the
-        language supported by the current lexer has a specific end of block
-        character (e.g. } in C++), then a line that begins with that character
-        is indented as well as the lines that make up the block. It may be
-        logically ored with AiOpening.""",
+        may be logically ored with AiClosing.""",
+
+    'AiClosing':
+        """If the language supported by the current lexer has a specific end of
+        block character (e.g. } in C++), then a line that begins with that
+        character is indented as well as the lines that make up the block. It
+        may be logically ored with AiOpening.""",
 
     # gcAnnotationDisplay
     # annotation display styles

@@ -1,32 +1,61 @@
 # editor.py
 
+"""Defines a QsciScintilla wrapper called `Editor`.
+
+Desirable features:
+
+    - Directly get/set attributes instead of using getters/setters
+      (in some cases, not even getters exist, for example 'marginsFont')
+      ex.: editor.font = ('Courier New', 10)
+
+Could use Qsci.QsciScintilla.SendScintilla() with predefined signals for things
+that aren't already implemented:
+
+    http://www.scintilla.org/ScintillaDoc.html
+
+"""
+
 __all__ = [
     'Editor',
 ]
 
 from PyQt4 import QtGui, Qsci
-from PyQt4.QtCore import SIGNAL
+from settings import _default_config
 
 class Editor (Qsci.QsciScintilla):
     """Wrapper for ``QsciScintilla``.
     """
-    # Marker identifiers
-    ARROW = 8
-
-    def __init__(self, parent, **config):
-        Qsci.QsciScintilla.__init__(self, parent)
-        self.configure(**Editor._default_config)
+    def __init__(self, parent=None, **config):
+        super(Editor, self).__init__(parent)
+        self.configure(**_default_config)
         self.configure(**config)
-        self._connect_event_handlers()
 
 
     def configure(self, **config):
         """Configure the editor with the given settings.
+
+        Accepts ``keyword=value`` arguments for any attribute ``foo`` that is
+        normally set via a ``setFoo`` method.
+
+        For example, instead of this:
+
+            >>> editor.setEdgeColor(QFont('Courier New', 10))
+            >>> editor.setEolVisibility(True)
+            >>> editor.setEdgeColumn(80)
+
+        This method allows you to do this:
+
+            >>> editor.configure(
+            ...     edgeColor = QFont('Courier New', 10),
+            ...     eolVisibility = True,
+            ...     edgeColumn = 80)
+
         """
         for name, args in config.items():
             # Get the setter method ('setWhatEver')
             setter = getattr(self, 'set' + name[0].upper() + name[1:])
-            # Multi-argument setting
+            # Handle setters that accept multiple arguments
+            # (like marginLineNumbers)
             if isinstance(args, (tuple, list)):
                 setter(*args)
             # Single-argument setting
@@ -39,54 +68,22 @@ class Editor (Qsci.QsciScintilla):
             self.setMarginWidth(0, font_metrics.width('00000') + 5)
 
 
-    def _connect_event_handlers(self):
-        """Connect event handler methods for the editor widget.
+    def line_rect(self, line_number):
+        """Return (x, y, width, height) of the text on ``line_number``.
         """
-        # Make margin 1 sensitive to clicks
-        self.setMarginSensitivity(1, True)
+        pos = self.positionFromLineIndex(line_number, 0)
+        x = self.SendScintilla(self.SCI_POINTXFROMPOSITION, 0, pos)
+        y = self.SendScintilla(self.SCI_POINTYFROMPOSITION, 0, pos)
+        # FIXME: Do we need to use a specific styleNumber here?
+        width = self.SendScintilla(self.SCI_TEXTWIDTH, 0, self.text(line_number))
+        height = self.textHeight(line_number)
 
-        # Define markers
-        self.markerDefine(Qsci.QsciScintilla.RightArrow, self.ARROW)
+        return (x, y, width, height)
 
-        # Connect signals
-        self.connect(
-            self,
-            SIGNAL('marginClicked(int, int, Qt::KeyboardModifiers)'),
-            self.on_margin_clicked)
-        self.connect(
-            self,
-            SIGNAL('linesChanged()'),
-            self.on_lines_changed)
-        self.connect(
-            self,
-            SIGNAL('cursorPositionChanged(int, int)'),
-            self.on_cursor_position_changed)
-        self.connect(
-            self,
-            SIGNAL('indicatorClicked(int, int, Qt::KeyboardModifiers)'),
-            self.on_indicator_clicked)
-
-
-    # Event handlers
-    #
-    def on_margin_clicked(self, margin, line, state):
-        if self.markersAtLine(line) != 0:
-            self.markerDelete(line, self.ARROW)
-        else:
-            self.markerAdd(line, self.ARROW)
-        print("margin_clicked(%s, %s, %s)" % (margin, line, state))
-
-    def on_lines_changed(self):
-        print("lines_changed")
-
-    def on_cursor_position_changed(self, line, index):
-        print("cursor_position_changed(%s, %s)" % (line, index))
-        #height = self.textHeight(line)
-        #print("  height: %d" % height)
-        #rect = self.childrenRect()
-        #print("  rect: (%d, %d), (%d, %d)" % (rect.x(), rect.y(), rect.width(), rect.height()))
-
-    def on_indicator_clicked(self, line, index, state):
-        print("indicator_clicked(%s, %s, %s)" % (line, index, state))
-
+if __name__ == '__main__':
+    import sys
+    app = QtGui.QApplication(sys.argv)
+    editor = Editor()
+    editor.show()
+    sys.exit(app.exec_())
 
