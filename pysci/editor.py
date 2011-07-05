@@ -81,9 +81,8 @@ class Editor (Qsci.QsciScintilla):
         return (x, y, width, height)
 
 if __name__ == '__main__':
-    import sys
-    app = QtGui.QApplication(sys.argv)
+    app = QtGui.QApplication([])
     editor = Editor()
     editor.show()
-    sys.exit(app.exec_())
+    app.exec_()
 
