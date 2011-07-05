@@ -21,7 +21,6 @@ class EditorTest (TestCase):
             autoIndent = False,
             indentationGuides = False,
             eolVisibility = True,
-            caretLineVisible = True,
             autoCompletionCaseSensitivity = False,
             autoCompletionReplaceWord = True,
         )
@@ -34,8 +33,24 @@ class EditorTest (TestCase):
         self.assertEqual(self.editor.autoCompletionCaseSensitivity(), False)
         self.assertEqual(self.editor.autoCompletionReplaceWord(), True)
 
-        # FIXME: Write getters for these - QsciScintilla doesn't provide them
-        #self.assertEqual(self.editor.caretLineVisible(), True)
+
+
+    def test_custom_getters(self):
+        """Custom attribute-getters return correct values.
+        """
+        # caretLineVisible
+        self.editor.configure(caretLineVisible=True)
+        self.assertEqual(self.editor.caretLineVisible(), True)
+        self.editor.configure(caretLineVisible=False)
+        self.assertEqual(self.editor.caretLineVisible(), False)
+
+        # caretLineBackgroundColor
+        white = QtGui.QColor('#FFFFFF')
+        red = QtGui.QColor('#FF0000')
+        self.editor.configure(caretLineBackgroundColor=white)
+        self.assertEqual(self.editor.caretLineBackgroundColor(), white)
+        self.editor.configure(caretLineBackgroundColor=red)
+        self.assertEqual(self.editor.caretLineBackgroundColor(), red)
 
 
     def test_numeric_configuration(self):
@@ -113,12 +128,11 @@ class EditorTest (TestCase):
             selectionForegroundColor = white,
             # Misc
             edgeColor = green,
-            caretLineBackgroundColor = white,
 
             # Tuple settings
             foldMarginColors = (red, white),
 
-            # Whitespace (deprecated?)
+            # Whitespace (deprecated or new?)
             #whitespaceForegroundColor = blue,
             #whitespaceBackgroundColor = grey,
         )
@@ -128,7 +142,6 @@ class EditorTest (TestCase):
         # FIXME: Write getters for these - QsciScintilla doesn't provide them
         #self.assertEqual(self.editor.marginsBackgroundColor(), grey)
         #self.assertEqual(self.editor.marginsForegroundColor(), black)
-        #self.assertEqual(self.editor.caretLineBackgroundColor(), white)
         #self.assertEqual(self.editor.foldMarginColors(), (red, white))
 
         # FIXME: Setting edge color always results in black, except when
