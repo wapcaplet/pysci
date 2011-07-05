@@ -22,6 +22,7 @@ __all__ = [
 from PyQt4 import QtGui, Qsci
 from settings import _default_config
 from enums import enum_value
+from util import bgr_int_to_rgb
 
 class Editor (Qsci.QsciScintilla):
     """Wrapper for ``QsciScintilla``.
@@ -31,6 +32,10 @@ class Editor (Qsci.QsciScintilla):
         self.configure(**_default_config)
         self.configure(**config)
 
+
+    ###
+    ### Extensions
+    ###
 
     def configure(self, **config):
         """Configure the editor with the given settings.
@@ -87,6 +92,29 @@ class Editor (Qsci.QsciScintilla):
 
         return (x, y, width, height)
 
+
+    ###
+    ### The Missing Getters
+    ###
+
+    def caretLineVisible(self):
+        """Return the ``caretLineVisible`` attribute (True or False).
+        """
+        return self.SendScintilla(self.SCI_GETCARETLINEVISIBLE)
+
+
+    def caretLineBackgroundColor(self):
+        """Return the ``caretLineBackgroundColor`` as a QColor.
+        """
+        # TODO: Support alpha?
+        bgr_int = self.SendScintilla(self.SCI_GETCARETLINEBACK)
+        r, g, b = bgr_int_to_rgb(bgr_int)
+        return QtGui.QColor(r, g, b)
+
+
+    ###
+    ### Documented builtins
+    ###
 
     def markerDefine(self, marker, markerNumber=-1):
         """Define a type of marker using the symbol sym with the marker number
