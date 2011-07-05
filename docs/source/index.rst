@@ -12,6 +12,7 @@ Contents:
     :maxdepth: 2
 
     motivation
+    api/index
 
 
 Indices and tables
