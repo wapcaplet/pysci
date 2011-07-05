@@ -111,10 +111,3 @@ class PySci (Qsci.QsciScintilla):
         r, g, b = bgr_int_to_rgb(bgr_int)
         return QtGui.QColor(r, g, b)
 
-
-if __name__ == '__main__':
-    app = QtGui.QApplication([])
-    editor = PySci()
-    editor.show()
-    app.exec_()
-

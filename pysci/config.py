@@ -5,6 +5,7 @@ __all__ = [
 ]
 
 from PyQt4 import QtCore, QtGui
+import settings
 
 class EditorSettings (QtGui.QDialog):
     """A dialog window for configuring a QsciScintilla editor.
@@ -18,7 +19,7 @@ class EditorSettings (QtGui.QDialog):
         layout = QtGui.QVBoxLayout()
 
         # Checkboxes for each boolean setting
-        for setting in self._bool_settings:
+        for setting in settings._bool_settings:
             layout.addWidget(self._create_checkbox(setting))
 
         # OK button
