@@ -21,6 +21,7 @@ __all__ = [
 
 from PyQt4 import QtGui, Qsci
 from settings import _default_config
+from enums import enum_value
 
 class Editor (Qsci.QsciScintilla):
     """Wrapper for ``QsciScintilla``.
@@ -54,10 +55,16 @@ class Editor (Qsci.QsciScintilla):
         for name, args in config.items():
             # Get the setter method ('setWhatEver')
             setter = getattr(self, 'set' + name[0].upper() + name[1:])
+
             # Handle setters that accept multiple arguments
             # (like marginLineNumbers)
             if isinstance(args, (tuple, list)):
                 setter(*args)
+
+            # Convert strings to enum value
+            elif isinstance(args, (str, unicode)):
+                setter(enum_value(args))
+
             # Single-argument setting
             else:
                 setter(args)

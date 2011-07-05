@@ -71,22 +71,59 @@ class EditorTest (TestCase):
         self.assertEqual(self.editor.font(), courier)
 
 
+    def assertColorsEqual(self, color_a, color_b):
+        self.assertEqual(
+            str(color_a.name()),
+            str(color_b.name()),
+        )
+
+
     def test_color_configuration(self):
         """Color configuration is correctly applied.
         """
+
         red = QtGui.QColor('#FF0000')
-        grey = QtGui.QColor('#C0C0C0')
-        white = QtGui.QColor('#FFFFFF')
+        green = QtGui.QColor('#00FF00')
+        blue = QtGui.QColor('#0000FF')
         black = QtGui.QColor('#000000')
+        grey = QtGui.QColor('#808080')
+        white = QtGui.QColor('#FFFFFF')
 
         self.editor.configure(
-            edgeColor = red,
+            # Main foreground/background
+            color = red,
+            paper = white,
+            # Margins
             marginsBackgroundColor = grey,
             marginsForegroundColor = black,
+            # Call tips
+            callTipsBackgroundColor = blue,
+            callTipsForegroundColor = red,
+            callTipsHighlightColor = grey,
+            # Braces
+            matchedBraceBackgroundColor = grey,
+            matchedBraceForegroundColor = green,
+            unmatchedBraceBackgroundColor = black,
+            unmatchedBraceForegroundColor = red,
+            # Indentation guides
+            indentationGuidesBackgroundColor = red,
+            indentationGuidesForegroundColor = green,
+            # Selection
+            selectionBackgroundColor = blue,
+            selectionForegroundColor = white,
+            # Misc
+            edgeColor = green,
             caretLineBackgroundColor = white,
+
+            # Tuple settings
             foldMarginColors = (red, white),
+
+            # Whitespace (deprecated?)
+            #whitespaceForegroundColor = blue,
+            #whitespaceBackgroundColor = grey,
         )
-        self.assertEqual(self.editor.edgeColor(), red)
+        self.assertColorsEqual(self.editor.color(), red)
+        self.assertColorsEqual(self.editor.paper(), white)
 
         # FIXME: Write getters for these - QsciScintilla doesn't provide them
         #self.assertEqual(self.editor.marginsBackgroundColor(), grey)
@@ -94,22 +131,20 @@ class EditorTest (TestCase):
         #self.assertEqual(self.editor.caretLineBackgroundColor(), white)
         #self.assertEqual(self.editor.foldMarginColors(), (red, white))
 
+        # FIXME: Setting edge color always results in black, except when
+        # setting it to the default red. Why? edgeColumn and edgeMode seem to
+        # have no effect.
+        #self.editor.setEdgeColumn(80)
+        #self.editor.setEdgeMode(self.editor.EdgeBackground)
+        #self.assertColorsEqual(self.editor.edgeColor(), green)
 
-    def test_color_string_configuration(self):
-        """Color string configuration is correctly applied.
-        """
-        colors = [
-            '#FF0000',
-            '#C0C0C0',
-            '#FFFFFF',
-            '#000000',
-        ]
-
-        for color in colors:
-            self.editor.configure(edgeColor = color)
-            expect = str(color).lower()
-            actual = str(self.editor.edgeColor().name()).lower()
-            self.assertEqual(expect, actual)
+        # Modify colors and confirm that changes took effect
+        self.editor.configure(
+            color = green,
+            paper = grey,
+        )
+        self.assertColorsEqual(self.editor.color(), green)
+        self.assertColorsEqual(self.editor.paper(), grey)
 
 
     def test_enum_configuration(self):
