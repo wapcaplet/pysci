@@ -35,49 +35,6 @@ everyone else). That's a shameful duplication of programming effort. PySci
 provides a ready-made one to save you the trouble.
 
 
-Docstrings
--------------------
-
-Another feature lacking in the typical binary distribution of QsciScintilla is
-the integrated docstrings that Pythonistas often depend on when programming.
-It's a hassle to look up online documentation when it could be built into the
-source code. Consider::
-
-    help(QsciScintilla.markerDefine)
-
-    markerDefine(...)
-        QsciScintilla.markerDefine(QsciScintilla.MarkerSymbol, int mnr=-1) -> int
-        QsciScintilla.markerDefine(str, int mnr=-1) -> int
-        QsciScintilla.markerDefine(QPixmap, int mnr=-1) -> int
-    END
-
-Versus::
-
-    help(PySci.markerDefine)
-
-    markerDefine(self, marker, markerNumber=-1) unbound pysci.editor.Editor method
-        Define a type of marker using the symbol sym with the marker number
-        markerNumber. If markerNumber is -1 then the marker number is
-        automatically allocated. The marker number is returned or -1 if too
-        many types of marker have been defined.
-
-        Markers are small geometric symbols and characters used, for example,
-        to indicate the current line or, in debuggers, to indicate breakpoints.
-        If a margin has a width of 0 then its markers are not drawn, but their
-        background colours affect the background colour of the corresponding
-        line of text.
-
-        There may be up to 32 types of marker defined at a time and each line
-        of text has a set of marker instances associated with it. Markers are
-        drawn according to their numerical identifier. Markers try to move with
-        their text by tracking where the start of their line moves to. For
-        example, when a line is deleted its markers are added to previous
-        line's markers.
-
-        Each marker type is identified by a marker number. Each instance of a
-        marker is identified by a marker handle.
-
-
 Missing methods
 -------------------
 
@@ -98,4 +55,14 @@ Y-coordinate in screen pixels of a given line in your editor widget? Or a
 bounding rectangle around the text in a given line? Many of the other PyQt4
 widgets provide such methods, but QsciScintilla doesn't. PySci aims to remedy
 this, making the widget fit more closely with its Qt counterparts.
+
+
+Docstrings
+-------------------
+
+Another feature lacking in the typical binary distribution of QsciScintilla is
+the integrated docstrings that Pythonistas often depend on when programming.
+It's a hassle to look up online documentation when it could be built into the
+source code. PySci may eventually provide builtin docstrings for the standard
+QsciScintilla methods.
 

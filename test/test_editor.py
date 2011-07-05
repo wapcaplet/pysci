@@ -1,13 +1,13 @@
-from pysci.editor import Editor
+from pysci.editor import PySci
 from unittest import TestCase
 from PyQt4 import QtGui, Qsci
 
-class EditorTest (TestCase):
-    """Test the Editor widget.
+class PySciTest (TestCase):
+    """Test the PySci widget.
     """
     def setUp(self):
         self.app = QtGui.QApplication(['-nograb', '-sync'])
-        self.editor = Editor()
+        self.editor = PySci()
         #self.editor.show()
         #self.app.exec_() # Don't call this, or nose will hang
 

@@ -1,6 +1,6 @@
 # editor.py
 
-"""Defines a QsciScintilla wrapper called `Editor`.
+"""Defines a QsciScintilla wrapper called `PySci`.
 
 Desirable features:
 
@@ -16,7 +16,7 @@ that aren't already implemented:
 """
 
 __all__ = [
-    'Editor',
+    'PySci',
 ]
 
 from PyQt4 import QtGui, Qsci
@@ -24,11 +24,11 @@ from settings import _default_config
 from enums import enum_value
 from util import bgr_int_to_rgb
 
-class Editor (Qsci.QsciScintilla):
+class PySci (Qsci.QsciScintilla):
     """Wrapper for ``QsciScintilla``.
     """
     def __init__(self, parent=None, **config):
-        super(Editor, self).__init__(parent)
+        super(PySci, self).__init__(parent)
         self.configure(**_default_config)
         self.configure(**config)
 
@@ -112,38 +112,9 @@ class Editor (Qsci.QsciScintilla):
         return QtGui.QColor(r, g, b)
 
 
-    ###
-    ### Documented builtins
-    ###
-
-    def markerDefine(self, marker, markerNumber=-1):
-        """Define a type of marker using the symbol sym with the marker number
-        markerNumber. If markerNumber is -1 then the marker number is
-        automatically allocated. The marker number is returned or -1 if too
-        many types of marker have been defined.
-
-        Markers are small geometric symbols and characters used, for example,
-        to indicate the current line or, in debuggers, to indicate breakpoints.
-        If a margin has a width of 0 then its markers are not drawn, but their
-        background colours affect the background colour of the corresponding
-        line of text.
-
-        There may be up to 32 types of marker defined at a time and each line
-        of text has a set of marker instances associated with it. Markers are
-        drawn according to their numerical identifier. Markers try to move with
-        their text by tracking where the start of their line moves to. For
-        example, when a line is deleted its markers are added to previous
-        line's markers.
-
-        Each marker type is identified by a marker number. Each instance of a
-        marker is identified by a marker handle.
-        """
-        pass
-
-
 if __name__ == '__main__':
     app = QtGui.QApplication([])
-    editor = Editor()
+    editor = PySci()
     editor.show()
     app.exec_()
 
