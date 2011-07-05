@@ -6,10 +6,13 @@ class EditorTest (TestCase):
     """Test the Editor widget.
     """
     def setUp(self):
-        self.app = QtGui.QApplication(['-sync'])
+        self.app = QtGui.QApplication(['-nograb', '-sync'])
         self.editor = Editor()
         #self.editor.show()
+        #self.app.exec_() # Don't call this, or nose will hang
 
+    def tearDown(self):
+        self.app.quit()
 
     def test_boolean_configuration(self):
         """Basic configuration settings are applied.
@@ -23,6 +26,7 @@ class EditorTest (TestCase):
             eolVisibility = True,
             autoCompletionCaseSensitivity = False,
             autoCompletionReplaceWord = True,
+            selectionToEol = True,
         )
         self.assertEqual(self.editor.tabIndents(), True)
         self.assertEqual(self.editor.indentationsUseTabs(), False)
@@ -32,6 +36,7 @@ class EditorTest (TestCase):
         self.assertEqual(self.editor.eolVisibility(), True)
         self.assertEqual(self.editor.autoCompletionCaseSensitivity(), False)
         self.assertEqual(self.editor.autoCompletionReplaceWord(), True)
+        self.assertEqual(self.editor.selectionToEol(), True)
 
 
 
@@ -59,9 +64,14 @@ class EditorTest (TestCase):
         self.editor.configure(
             tabWidth = 4,
             edgeColumn = 72,
+            # Deprecated or new?
+            #extraAscent = 2,
+            #extraDescent = 3,
         )
         self.assertEqual(self.editor.tabWidth(), 4)
         self.assertEqual(self.editor.edgeColumn(), 72)
+        #self.assertEqual(self.editor.extraAscent(), 2)
+        #self.assertEqual(self.editor.extraDescent(), 3)
 
 
     def test_tuple_configuration(self):
