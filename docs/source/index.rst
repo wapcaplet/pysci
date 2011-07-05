@@ -4,7 +4,7 @@ PySci
 This module attempts to provide a more Pythonic interface to the QsciScintilla_
 editor widget.
 
-.. _QsciScintilla: http://www.riverbankcomputing.co.uk/static/Docs/QScintilla2/classQsciScintilla.html)
+.. _QsciScintilla: http://www.riverbankcomputing.co.uk/static/Docs/QScintilla2/classQsciScintilla.html
 
 Contents:
 

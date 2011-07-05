@@ -38,8 +38,8 @@ provides a ready-made one to save you the trouble.
 Docstrings
 -------------------
 
-Still another feature lacking in the typical binary distribution of QsciScintilla
-is the integrated docstrings that Pythonistas often depend on when programming.
+Another feature lacking in the typical binary distribution of QsciScintilla is
+the integrated docstrings that Pythonistas often depend on when programming.
 It's a hassle to look up online documentation when it could be built into the
 source code. Consider::
 
