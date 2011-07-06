@@ -19,7 +19,11 @@ __all__ = [
     'PySci',
 ]
 
-from PyQt4 import QtGui, Qsci
+try:
+    from PyQt4 import QtGui, Qsci
+except ImportError:
+    print("Please install PyQt4.")
+
 from settings import _default_config
 from enums import enum_value
 from util import bgr_int_to_rgb

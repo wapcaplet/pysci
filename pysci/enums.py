@@ -3,7 +3,10 @@
 """Wrapper for Qsci.QsciScintilla enumerations.
 """
 
-from PyQt4 import Qsci
+try:
+    from PyQt4 import Qsci
+except ImportError:
+    print("Please install PyQt4.")
 
 class BadEnum (Exception):
     """Bad (unknown or failed) enumeration name.

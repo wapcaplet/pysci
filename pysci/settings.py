@@ -3,7 +3,10 @@
 """Configuration settings for QSciScintilla widgets.
 """
 
-from PyQt4 import Qsci, QtGui
+try:
+    from PyQt4 import Qsci, QtGui
+except ImportError:
+    print("Please install PyQt4.")
 
 _default_config = {
     # Flags and numeric values

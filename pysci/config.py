@@ -4,9 +4,13 @@ __all__ = [
     'EditorSettings',
 ]
 
-from PyQt4 import QtCore, QtGui
+try:
+    from PyQt4 import QtCore, QtGui
+except ImportError:
+    print("Please insteall PyQt4.")
+
 import settings
-from enums import enum_value
+#from enums import enum_value
 
 class EditorSettings (QtGui.QDialog):
     """A dialog window for configuring a QsciScintilla editor.
