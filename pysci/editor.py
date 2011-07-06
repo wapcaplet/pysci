@@ -37,6 +37,20 @@ class PySci (Qsci.QsciScintilla):
     ### Extensions
     ###
 
+    def get_config(self, name, *args):
+        """Return the current configuration setting for attribute ``name``.
+        """
+        getter = getattr(self, name)
+        return getter(*args)
+
+
+    def set_config(self, name, value):
+        """Set the current configuration setting for attribute ``name``.
+        """
+        conf = {name: value}
+        self.configure(**conf)
+
+
     def configure(self, **config):
         """Configure the editor with the given settings.
 

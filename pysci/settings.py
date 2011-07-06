@@ -46,75 +46,39 @@ _bool_settings = (
     # Indentation
     {
         'label': 'Tab indents',
-        'get': 'tabIndents',
-        'set': 'setTabIndents',
+        'name': 'tabIndents',
         'on': True,
         'off': False,
     },
     {
         'label': 'Backspace unindents',
-        'get': 'backspaceUnindents',
-        'set': 'setBackspaceUnindents',
+        'name': 'backspaceUnindents',
         'on': True,
         'off': False,
     },
     {
         'label': 'Auto-indent',
-        'get': 'autoIndent',
-        'set': 'setAutoIndent',
+        'name': 'autoIndent',
         'on': True,
         'off': False,
     },
     {
         'label': 'Show indentation guides',
-        'get': 'indentationGuides',
-        'set': 'setIndentationGuides',
+        'name': 'indentationGuides',
         'on': True,
         'off': False,
     },
     {
         'label': 'Use tab character',
-        'get': 'indentationsUseTabs',
-        'set': 'setIndentationsUseTabs',
+        'name': 'indentationsUseTabs',
         'on': True,
         'off': False,
-    },
-    # Visibility
-    {
-        'label': 'Visible whitespace',
-        'get': 'whitespaceVisibility',
-        'set': 'setWhitespaceVisibility',
-        'on': Qsci.QsciScintilla.WsVisible,
-        'off': Qsci.QsciScintilla.WsInvisible,
     },
     {
         'label': 'Visible line endings',
-        'get': 'eolVisibility',
-        'set': 'setEolVisibility',
+        'name': 'eolVisibility',
         'on': True,
         'off': False,
-    },
-    # Other
-    {
-        'label': 'Edge marker',
-        'get': 'edgeMode',
-        'set': 'setEdgeMode',
-        'on': Qsci.QsciScintilla.EdgeLine,
-        'off': Qsci.QsciScintilla.EdgeNone,
-    },
-    {
-        'label': 'Brace matching',
-        'get': 'braceMatching',
-        'set': 'setBraceMatching',
-        'on': Qsci.QsciScintilla.SloppyBraceMatch,
-        'off': Qsci.QsciScintilla.NoBraceMatch,
-    },
-    {
-        'label': 'Code folding',
-        'get': 'folding',
-        'set': 'setFolding',
-        'on': Qsci.QsciScintilla.BoxedTreeFoldStyle,
-        'off': Qsci.QsciScintilla.NoFoldStyle,
     },
     # FIXME: This requires an integer 'margin' argument
     #{
@@ -124,7 +88,96 @@ _bool_settings = (
         #'on': True,
         #'off': False,
     #},
+)
 
+# Multiple-selection settings
+_combo_settings = (
+    {
+        'label': 'Annotation Display',
+        'name': 'annotationDisplay',
+        'values': (
+            ('Hidden', 'AnnotationHidden'),
+            ('Standard', 'AnnotationStandard'),
+            ('Boxed', 'AnnotationBoxed'),
+        ),
+    },
+    {
+        'label': 'Auto Completion Source',
+        'name': 'autoCompletionSource',
+        'values': (
+            ('None', 'AcsNone'),
+            ('All', 'AcsAll'),
+            ('Document', 'AcsDocument'),
+            ('APIs', 'AcsAPIs'),
+        ),
+    },
+    {
+        'label': 'Brace Matching',
+        'name': 'braceMatching',
+        'values': (
+            ('None', 'NoBraceMatch'),
+            ('Strict', 'StrictBraceMatch'),
+            ('Sloppy', 'SloppyBraceMatch'),
+        ),
+    },
+    {
+        'label': 'Call Tips Style',
+        'name': 'callTipsStyle',
+        'values': (
+            ('None', 'CallTipsNone'),
+            ('No Context', 'CallTipsNoContext'),
+            ('No Auto-completion Context', 'CallTipsNoAutoCompletionContext'),
+            ('Context', 'CallTipsContext'),
+        ),
+    },
+    {
+        'label': 'Edge Mode',
+        'name': 'edgeMode',
+        'values': (
+            ('None', 'EdgeNone'),
+            ('Line', 'EdgeLine'),
+            ('Background', 'EdgeBackground'),
+        ),
+    },
+    {
+        'label': 'Line Endings',
+        'name': 'eolMode',
+        'values': (
+            ('Windows', 'EolWindows'),
+            ('Unix', 'EolUnix'),
+            ('Mac', 'EolMac'),
+        ),
+    },
+    {
+        'label': 'Folding',
+        'name': 'folding',
+        'values': (
+            ('None', 'NoFoldStyle'),
+            ('Plain','PlainFoldStyle'),
+            ('Circled', 'CircledFoldStyle'),
+            ('Boxed', 'BoxedFoldStyle'),
+            ('Circled Tree', 'CircledTreeFoldStyle'),
+            ('Boxed Tree', 'BoxedTreeFoldStyle'),
+        ),
+    },
+    {
+        'label': 'Whitespace Visibility',
+        'name': 'whitespaceVisibility',
+        'values': (
+            ('Invisible', 'WsInvisible'),
+            ('Visible', 'WsVisible'),
+            ('Visible After Indent', 'WsVisibleAfterIndent'),
+        ),
+    },
+    {
+        'label': 'Wrap Mode',
+        'name': 'wrapMode',
+        'values': (
+            ('None', 'WrapNone'),
+            ('Word', 'WrapWord'),
+            ('Character', 'WrapCharacter'),
+        ),
+    },
 )
 
 # Custom foreground and background colors
@@ -132,30 +185,30 @@ _color_settings = (
     # Basic editor colors (no effect with lexer on)
     {
         'label': 'Text color',
-        'get': 'color',
-        'set': 'setColor',
+        'name': 'color',
     },
     {
         'label': 'Paper color',
-        'get': 'paper',
-        'set': 'setPaper',
+        'name': 'paper',
     },
+)
+_other_color_settings = (
     # Selection
     {
-        'label': '',
+        'label': 'Selection foreground color',
         'set': 'setSelectionForegroundColor',
     },
     {
-        'label': '',
+        'label': 'Selection background color',
         'set': 'setSelectionBackgroundColor',
     },
     # Caret (current line)
     {
-        'label': '',
+        'label': 'Caret foreground color',
         'set': 'setCaretForegroundColor',
     },
     {
-        'label': '',
+        'label': 'Caret background color',
         'set': 'setCaretLineBackgroundColor',
     },
     # Edge marker
