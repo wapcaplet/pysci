@@ -3,47 +3,6 @@
 """Configuration settings for QSciScintilla widgets.
 """
 
-try:
-    from PyQt4 import Qsci, QtGui
-except ImportError:
-    print("Please install PyQt4.")
-
-_default_config = {
-    # Flags and numeric values
-    'tabIndents': True,
-    'tabWidth': 4,
-    'indentationsUseTabs': False,
-    'backspaceUnindents': True,
-    'autoIndent': False,
-    'indentationGuides': False,
-    'eolVisibility': False,
-    'edgeColumn': 80,
-    'caretLineVisible': True,
-    'marginLineNumbers': (0, True),
-
-    # Fonts
-    'font': QtGui.QFont('Courier New', 10),
-    'marginsFont': QtGui.QFont('Courier New', 10),
-
-    # Colors
-    'edgeColor': QtGui.QColor('#FF0000'),
-    'caretLineBackgroundColor': QtGui.QColor('#F0F0F0'),
-    'marginsBackgroundColor': QtGui.QColor('#C0C0C0'),
-    'marginsForegroundColor': QtGui.QColor('#000000'),
-    'foldMarginColors': (QtGui.QColor('#AAAAFF'), QtGui.QColor('#333300')),
-
-    # Whitespace: Ws(Invisible|Visible|VisibleAfterIndent)
-    'whitespaceVisibility': Qsci.QsciScintilla.WsInvisible,
-    # Edge mode: Edge(None|Line|Background)
-    'edgeMode': Qsci.QsciScintilla.EdgeNone,
-    # Brace matching: (No|Strict|Sloppy)BraceMatch
-    'braceMatching': Qsci.QsciScintilla.SloppyBraceMatch,
-    # Folding: (No|Plain|Circled|Boxed|CircledTree|BoxedTree)FoldStyle
-    'folding': Qsci.QsciScintilla.NoFoldStyle,
-    # Wrap mode: Wrap(None|Word|Character)
-    'wrapMode': Qsci.QsciScintilla.WrapWord,
-}
-
 # Custom boolean settings, shown as checkboxes
 _bool_settings = (
     # Indentation

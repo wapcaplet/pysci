@@ -24,17 +24,59 @@ try:
 except ImportError:
     print("Please install PyQt4.")
 
-from settings import _default_config
 from enums import enum_value
 from util import bgr_int_to_rgb
+
 
 class PySci (Qsci.QsciScintilla):
     """Wrapper for ``QsciScintilla``.
     """
+
     def __init__(self, parent=None, **config):
         super(PySci, self).__init__(parent)
-        self.configure(**_default_config)
+        self._set_default_config()
+        # Override defaults with any customizations
         self.configure(**config)
+
+
+    def _set_default_config(self):
+        """Set default configuration settings.
+        """
+        self.configure(
+            # Flags and numeric values
+            tabIndents = True,
+            tabWidth = 4,
+            indentationsUseTabs = False,
+            backspaceUnindents = True,
+            autoIndent = False,
+            indentationGuides = False,
+            eolVisibility = False,
+            edgeColumn = 80,
+            caretLineVisible = True,
+            marginLineNumbers = (0, True),
+
+            # Fonts
+            font = QtGui.QFont('Courier New', 10),
+            marginsFont = QtGui.QFont('Courier New', 10),
+
+            # Colors
+            edgeColor = QtGui.QColor('#FF0000'),
+            caretLineBackgroundColor = QtGui.QColor('#F0F0F0'),
+            marginsBackgroundColor = QtGui.QColor('#C0C0C0'),
+            marginsForegroundColor = QtGui.QColor('#000000'),
+            foldMarginColors = (QtGui.QColor('#AAAAFF'), QtGui.QColor('#333300')),
+
+            # Whitespace: Ws(Invisible|Visible|VisibleAfterIndent)
+            whitespaceVisibility = 'WsInvisible',
+            # Edge mode: Edge(None|Line|Background)
+            edgeMode = 'EdgeLine',
+            # Brace matching: (No|Strict|Sloppy)BraceMatch
+            braceMatching = 'SloppyBraceMatch',
+            # Folding: (No|Plain|Circled|Boxed|CircledTree|BoxedTree)FoldStyle
+            folding = 'NoFoldStyle',
+            # Wrap mode: Wrap(None|Word|Character)
+            wrapMode = 'WrapWord',
+        )
 
 
     ###
