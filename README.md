@@ -5,6 +5,8 @@ This module attempts to provide a more Pythonic interface to the
 [QsciScintilla](http://www.riverbankcomputing.co.uk/static/Docs/QScintilla2/classQsciScintilla.html)
 editor widget. It is currently in the early experimental phase of development, and should not be used for anything important.
 
+[Documentation is here](http://readthedocs.org/docs/pysci/en/latest/).
+
 
 Copyright
 ---------
