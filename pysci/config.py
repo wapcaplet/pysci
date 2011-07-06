@@ -36,8 +36,16 @@ class EditorSettings (QtGui.QDialog):
             hbox.addWidget(self._create_combobox(combo_setting))
             layout.addLayout(hbox)
 
+        # Color pickers for each color setting
         for color_setting in settings._color_settings:
             layout.addWidget(self._create_color_picker(color_setting))
+
+        # Spinboxes for each numeric setting
+        for num_setting in settings._numeric_settings:
+            hbox = QtGui.QHBoxLayout()
+            hbox.addWidget(QtGui.QLabel(num_setting['label']))
+            hbox.addWidget(self._create_number_box(num_setting))
+            layout.addLayout(hbox)
 
         # OK button
         ok = QtGui.QPushButton('OK', self)
@@ -119,5 +127,24 @@ class EditorSettings (QtGui.QDialog):
             button_pressed)
 
         return button
+
+
+    def _create_number_box(self, setting):
+        """Return a ``QSpinBox`` for entering a number.
+        """
+        spinbox = QtGui.QSpinBox()
+
+        # Set initial value
+        spinbox.setValue(self.editor.get_config(setting['name']))
+
+        def spinbox_changed(value):
+            self.editor.set_config(setting['name'], value)
+
+        # Connect event handler
+        self.connect(spinbox,
+            QtCore.SIGNAL('valueChanged(int)'),
+            spinbox_changed)
+
+        return spinbox
 
 

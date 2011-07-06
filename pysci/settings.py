@@ -276,6 +276,26 @@ _other_color_settings = (
     },
 )
 
+_numeric_settings = (
+    # TODO: Need a getter for this
+    #{
+        #'label': 'Caret width (pixels)',
+        #'name': 'caretWidth',
+    #},
+    {
+        'label': 'Text width (characters)',
+        'name': 'edgeColumn',
+    },
+    {
+        'label': 'Indentation width (characters)',
+        'name': 'indentationWidth',
+    },
+    {
+        'label': 'Tab width (characters)',
+        'name': 'tabWidth',
+    },
+)
+
 # Other settings
 #
 # Numeric:
@@ -289,11 +309,5 @@ _other_color_settings = (
 #     Font
 #     Font color
 #     Syntax highlighting colors
-#
-# Misc:
-#
-#     EolWindows / EolUnix / EolMac
-#     WrapNone / WrapWord / WrapCharacter
-#
 #
 
