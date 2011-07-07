@@ -27,36 +27,39 @@ class EditorSettings (QtGui.QDialog):
     def _create_layout(self):
         """Create and return the main layout for the dialog widget.
         """
-        layout = QtGui.QVBoxLayout()
-
-        # Checkboxes for each boolean setting
-        for bool_setting in settings._bool_settings:
-            layout.addWidget(self._create_checkbox(bool_setting))
+        # Split settings into two columns
+        left_layout = QtGui.QVBoxLayout()
+        right_layout = QtGui.QVBoxLayout()
 
         # Comboboxes for each multi-select setting
         for combo_setting in settings._combo_settings:
-            hbox = QtGui.QHBoxLayout()
-            hbox.addWidget(QtGui.QLabel(combo_setting['label']))
-            hbox.addWidget(self._create_combobox(combo_setting))
-            layout.addLayout(hbox)
+            left_layout.addLayout(self._create_combobox(combo_setting))
+
+        left_layout.addStretch(1)
+
+        # Checkboxes for each boolean setting
+        for bool_setting in settings._bool_settings:
+            right_layout.addWidget(self._create_checkbox(bool_setting))
 
         # Color pickers for each color setting
         for color_setting in settings._color_settings:
-            layout.addWidget(self._create_color_picker(color_setting))
+            right_layout.addLayout(self._create_color_picker(color_setting))
 
         # Spinboxes for each numeric setting
         for num_setting in settings._numeric_settings:
-            hbox = QtGui.QHBoxLayout()
-            hbox.addWidget(QtGui.QLabel(num_setting['label']))
-            hbox.addWidget(self._create_number_box(num_setting))
-            layout.addLayout(hbox)
+            right_layout.addLayout(self._create_number_box(num_setting))
 
         # OK button
         ok = QtGui.QPushButton('OK', self)
         self.connect(ok, QtCore.SIGNAL('clicked()'), self.accept)
-        layout.addWidget(ok)
+        right_layout.addWidget(ok)
 
-        return layout
+        main_layout = QtGui.QHBoxLayout()
+        main_layout.addLayout(left_layout)
+        main_layout.addSpacing(10)
+        main_layout.addLayout(right_layout)
+
+        return main_layout
 
 
     def _create_checkbox(self, setting):
@@ -87,8 +90,8 @@ class EditorSettings (QtGui.QDialog):
 
 
     def _create_combobox(self, setting):
-        """Return a ``QComboBox`` for the given setting,
-        with the event handler already connected.
+        """Return a layout with a label and combobox for modifying a
+        multiple-value setting.
         """
         # Create the combobox and populate it
         combo = QtGui.QComboBox(self)
@@ -113,28 +116,46 @@ class EditorSettings (QtGui.QDialog):
             QtCore.SIGNAL('currentIndexChanged(int)'),
             combo_changed)
 
-        return combo
+        # Layout with label and combobox
+        layout = QtGui.QHBoxLayout()
+        layout.addWidget(QtGui.QLabel(setting['label']))
+        layout.addWidget(combo)
+
+        return layout
 
 
     def _create_color_picker(self, setting):
-        """Return a button for picking a color.
+        """Return a color-picker widget for a color-based setting.
         """
-        button = QtGui.QPushButton(setting['label'])
+        # Button with colored background
+        button = QtGui.QPushButton()
 
+        # Event handler
         def button_pressed():
             current_color = self.editor.get_config(setting['name'])
             color = QtGui.QColorDialog.getColor(current_color)
+            button.setStyleSheet("background-color: %s" % color.name())
             self.editor.set_config(setting['name'], color)
 
+        # Connect event handler
         self.connect(button,
             QtCore.SIGNAL('pressed()'),
             button_pressed)
 
-        return button
+        # Set default background color
+        color = self.editor.get_config(setting['name'])
+        button.setStyleSheet("background-color: %s" % color.name())
+
+        # Layout with label and color button
+        layout = QtGui.QHBoxLayout()
+        layout.addWidget(QtGui.QLabel(setting['label']))
+        layout.addWidget(button)
+
+        return layout
 
 
     def _create_number_box(self, setting):
-        """Return a ``QSpinBox`` for entering a number.
+        """Return a numeric entry widget for a numeric setting.
         """
         spinbox = QtGui.QSpinBox()
 
@@ -149,6 +170,11 @@ class EditorSettings (QtGui.QDialog):
             QtCore.SIGNAL('valueChanged(int)'),
             spinbox_changed)
 
-        return spinbox
+        # Layout with label and color button
+        layout = QtGui.QHBoxLayout()
+        layout.addWidget(QtGui.QLabel(setting['label']))
+        layout.addWidget(spinbox)
+
+        return layout
 
 
