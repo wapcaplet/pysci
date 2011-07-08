@@ -9,73 +9,41 @@ _bool_settings = (
     {
         'label': 'Tab indents',
         'name': 'tabIndents',
-        'on': True,
-        'off': False,
+        'help': 'Use the tab key to indent text',
     },
     {
         'label': 'Backspace unindents',
         'name': 'backspaceUnindents',
-        'on': True,
-        'off': False,
+        'help': 'Backspace will unindent a line instead of just deleting a character',
     },
     {
         'label': 'Auto-indent',
         'name': 'autoIndent',
-        'on': True,
-        'off': False,
+        'help': 'Automatically indent text to match the preceding line',
     },
     {
         'label': 'Show indentation guides',
         'name': 'indentationGuides',
-        'on': True,
-        'off': False,
+        'help': 'Display visible guidelines to help keep indentation consistent',
     },
     {
         'label': 'Use tab character',
         'name': 'indentationsUseTabs',
-        'on': True,
-        'off': False,
+        'help': 'Tab key inserts an actual tab character instead of spaces',
     },
     {
         'label': 'Visible line endings',
         'name': 'eolVisibility',
-        'on': True,
-        'off': False,
+        'help': 'Display a visible icon for carriage return and line feeds',
     },
-    # FIXME: This requires an integer 'margin' argument
-    #{
-        #'label': 'Show line numbers',
-        #'get': 'marginLineNumbers',
-        #'set': 'setMarginLineNumbers',
-        #'on': True,
-        #'off': False,
-    #},
 )
 
 # Multiple-selection settings
 _combo_settings = (
     {
-        'label': 'Annotation Display',
-        'name': 'annotationDisplay',
-        'values': (
-            ('Hidden', 'AnnotationHidden'),
-            ('Standard', 'AnnotationStandard'),
-            ('Boxed', 'AnnotationBoxed'),
-        ),
-    },
-    {
-        'label': 'Auto Completion Source',
-        'name': 'autoCompletionSource',
-        'values': (
-            ('None', 'AcsNone'),
-            ('All', 'AcsAll'),
-            ('Document', 'AcsDocument'),
-            ('APIs', 'AcsAPIs'),
-        ),
-    },
-    {
         'label': 'Brace Matching',
         'name': 'braceMatching',
+        'help': 'Whether and how to highlight matching {} [] () braces',
         'values': (
             ('None', 'NoBraceMatch'),
             ('Strict', 'StrictBraceMatch'),
@@ -83,18 +51,9 @@ _combo_settings = (
         ),
     },
     {
-        'label': 'Call Tips Style',
-        'name': 'callTipsStyle',
-        'values': (
-            ('None', 'CallTipsNone'),
-            ('No Context', 'CallTipsNoContext'),
-            ('No Auto-completion Context', 'CallTipsNoAutoCompletionContext'),
-            ('Context', 'CallTipsContext'),
-        ),
-    },
-    {
         'label': 'Edge Mode',
         'name': 'edgeMode',
+        'help': 'How the edge of the text width is indicated',
         'values': (
             ('None', 'EdgeNone'),
             ('Line', 'EdgeLine'),
@@ -104,15 +63,17 @@ _combo_settings = (
     {
         'label': 'Line Endings',
         'name': 'eolMode',
+        'help': 'End lines with carriage return and/or line feed',
         'values': (
-            ('Windows', 'EolWindows'),
-            ('Unix', 'EolUnix'),
-            ('Mac', 'EolMac'),
+            ('Windows (CR/LF)', 'EolWindows'),
+            ('Unix (LF)', 'EolUnix'),
+            ('Mac (CR)', 'EolMac'),
         ),
     },
     {
         'label': 'Folding',
         'name': 'folding',
+        'help': 'What kind of icons to display for code-folding',
         'values': (
             ('None', 'NoFoldStyle'),
             ('Plain','PlainFoldStyle'),
@@ -125,6 +86,7 @@ _combo_settings = (
     {
         'label': 'Whitespace Visibility',
         'name': 'whitespaceVisibility',
+        'help': 'Whether whitespace is indicated with visible markers',
         'values': (
             ('Invisible', 'WsInvisible'),
             ('Visible', 'WsVisible'),
@@ -134,12 +96,44 @@ _combo_settings = (
     {
         'label': 'Wrap Mode',
         'name': 'wrapMode',
+        'help': 'How to wrap text when it reaches the text width',
         'values': (
             ('None', 'WrapNone'),
             ('Word', 'WrapWord'),
             ('Character', 'WrapCharacter'),
         ),
     },
+    # Stuff the user probably doesn't care about configuring
+    # (or do you?)
+    #{
+        #'label': 'Annotation Display',
+        #'name': 'annotationDisplay',
+        #'values': (
+            #('Hidden', 'AnnotationHidden'),
+            #('Standard', 'AnnotationStandard'),
+            #('Boxed', 'AnnotationBoxed'),
+        #),
+    #},
+    #{
+        #'label': 'Auto Completion Source',
+        #'name': 'autoCompletionSource',
+        #'values': (
+            #('None', 'AcsNone'),
+            #('All', 'AcsAll'),
+            #('Document', 'AcsDocument'),
+            #('APIs', 'AcsAPIs'),
+        #),
+    #},
+    #{
+        #'label': 'Call Tips Style',
+        #'name': 'callTipsStyle',
+        #'values': (
+            #('None', 'CallTipsNone'),
+            #('No Context', 'CallTipsNoContext'),
+            #('No Auto-completion Context', 'CallTipsNoAutoCompletionContext'),
+            #('Context', 'CallTipsContext'),
+        #),
+    #},
 )
 
 # Custom foreground and background colors
@@ -245,16 +239,15 @@ _numeric_settings = (
         #'name': 'caretWidth',
     #},
     {
-        'label': 'Text width (characters)',
+        'label': 'Text width',
         'name': 'edgeColumn',
+        'help': 'Number of characters per line before wrapping occurs',
     },
     {
-        'label': 'Indentation width (characters)',
-        'name': 'indentationWidth',
-    },
-    {
-        'label': 'Tab width (characters)',
+        'label': 'Tab width',
         'name': 'tabWidth',
+        'help': 'Width of tabs in characters, or the number of'
+            ' spaces to insert when tab is pressed',
     },
 )
 

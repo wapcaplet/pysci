@@ -135,9 +135,12 @@ class PySci (Qsci.QsciScintilla):
                 setter(args)
 
         # Adjust margin if line numbers are on
-        if 'marginLineNumbers' in config and config['marginLineNumbers'] == (0, True):
-            font_metrics = QtGui.QFontMetrics(self.font())
-            self.setMarginWidth(0, font_metrics.width('00000') + 5)
+        if 'marginLineNumbers' in config:
+            if config['marginLineNumbers'] == (0, True):
+                font_metrics = QtGui.QFontMetrics(self.font())
+                self.setMarginWidth(0, font_metrics.width('00000') + 5)
+            else:
+                self.setMarginWidth(0, 0)
 
 
     def line_rect(self, line_number):

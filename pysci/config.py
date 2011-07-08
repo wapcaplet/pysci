@@ -27,45 +27,41 @@ class EditorSettings (QtGui.QDialog):
     def _create_layout(self):
         """Create and return the main layout for the dialog widget.
         """
-        # Split settings into two columns
-        left_layout = QtGui.QVBoxLayout()
-        right_layout = QtGui.QVBoxLayout()
+        layout = QtGui.QVBoxLayout()
+
+        # Checkboxes for each boolean setting
+        layout.addWidget(self._create_line_number_checkbox())
+        for bool_setting in settings._bool_settings:
+            layout.addWidget(self._create_checkbox(bool_setting))
 
         # Comboboxes for each multi-select setting
         for combo_setting in settings._combo_settings:
-            left_layout.addLayout(self._create_combobox(combo_setting))
-
-        left_layout.addStretch(1)
-
-        # Checkboxes for each boolean setting
-        for bool_setting in settings._bool_settings:
-            right_layout.addWidget(self._create_checkbox(bool_setting))
+            layout.addLayout(self._create_combobox(combo_setting))
 
         # Color pickers for each color setting
         for color_setting in settings._color_settings:
-            right_layout.addLayout(self._create_color_picker(color_setting))
+            layout.addLayout(self._create_color_picker(color_setting))
 
         # Spinboxes for each numeric setting
         for num_setting in settings._numeric_settings:
-            right_layout.addLayout(self._create_number_box(num_setting))
+            layout.addLayout(self._create_number_box(num_setting))
 
         # OK button
         ok = QtGui.QPushButton('OK', self)
         self.connect(ok, QtCore.SIGNAL('clicked()'), self.accept)
-        right_layout.addWidget(ok)
+        layout.addWidget(ok)
 
-        main_layout = QtGui.QHBoxLayout()
-        main_layout.addLayout(left_layout)
-        main_layout.addSpacing(10)
-        main_layout.addLayout(right_layout)
-
-        return main_layout
+        return layout
 
 
     def _create_checkbox(self, setting):
         """Return a ``QCheckBox`` for the given setting,
         with the event handler already connected.
         """
+        checkbox = QtGui.QCheckBox(setting['label'], self)
+        if 'help' in setting:
+            checkbox.setToolTip(setting['help'])
+
         def checkbox_changed(state):
             """Event handler for the given setting.
             """
@@ -74,8 +70,6 @@ class EditorSettings (QtGui.QDialog):
             elif state == QtCore.Qt.Unchecked:
                 self.editor.set_config(setting['name'], False)
 
-        # Create the checkbox and connect the event handler
-        checkbox = QtGui.QCheckBox(setting['label'], self)
         self.connect(checkbox,
             QtCore.SIGNAL('stateChanged(int)'),
             checkbox_changed)
@@ -98,6 +92,8 @@ class EditorSettings (QtGui.QDialog):
         for label, value in setting['values']:
             data = QtCore.QVariant(value)
             combo.addItem(label, data)
+        if 'help' in setting:
+            combo.setToolTip(setting['help'])
 
         # TODO: Set the initial value, if any
         # (This approach doesn't work due to string vs. int issues)
@@ -158,6 +154,8 @@ class EditorSettings (QtGui.QDialog):
         """Return a numeric entry widget for a numeric setting.
         """
         spinbox = QtGui.QSpinBox()
+        if 'help' in setting:
+            spinbox.setToolTip(setting['help'])
 
         # Set initial value
         spinbox.setValue(self.editor.get_config(setting['name']))
@@ -177,4 +175,30 @@ class EditorSettings (QtGui.QDialog):
 
         return layout
 
+
+    def _create_line_number_checkbox(self):
+        """Return a widget for enabling/disabling line numbers.
+        """
+        # Line numbers
+        def checkbox_changed(state):
+            """Event handler for the given setting.
+            """
+            if state == QtCore.Qt.Checked:
+                self.editor.set_config('marginLineNumbers', (0, True))
+            elif state == QtCore.Qt.Unchecked:
+                self.editor.set_config('marginLineNumbers', (0, False))
+
+        # Create the checkbox and connect the event handler
+        checkbox = QtGui.QCheckBox('Line numbers', self)
+        self.connect(checkbox,
+            QtCore.SIGNAL('stateChanged(int)'),
+            checkbox_changed)
+
+        # Set the initial checkbox state based on current value
+        if self.editor.get_config('marginLineNumbers', 0):
+            checkbox.setCheckState(QtCore.Qt.Checked)
+        else:
+            checkbox.setCheckState(QtCore.Qt.Unchecked)
+
+        return checkbox
 
