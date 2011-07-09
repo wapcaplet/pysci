@@ -12,46 +12,67 @@ try:
 except ImportError:
     print("Please insteall PyQt4.")
 
-# Custom boolean settings, shown as checkboxes
-_bool_settings = (
-    # Indentation
-    {
+
+_settings = {
+    # Boolean settings
+    'tabIndents': {
         'label': 'Tab indents',
-        'name': 'tabIndents',
+        'type': 'bool',
         'help': 'Use the tab key to indent text',
     },
-    {
+    'backspaceUnindents': {
         'label': 'Backspace unindents',
-        'name': 'backspaceUnindents',
+        'type': 'bool',
         'help': 'Backspace will unindent a line instead of just deleting a character',
     },
-    {
+    'autoIndent': {
         'label': 'Auto-indent',
-        'name': 'autoIndent',
+        'type': 'bool',
         'help': 'Automatically indent text to match the preceding line',
     },
-    {
+    'indentationGuides': {
         'label': 'Show indentation guides',
-        'name': 'indentationGuides',
+        'type': 'bool',
         'help': 'Display visible guidelines to help keep indentation consistent',
     },
-    {
+    'indentationsUseTabs': {
         'label': 'Use tab character',
-        'name': 'indentationsUseTabs',
+        'type': 'bool',
         'help': 'Tab key inserts an actual tab character instead of spaces',
     },
-    {
+    'eolVisibility': {
         'label': 'Visible line endings',
-        'name': 'eolVisibility',
+        'type': 'bool',
         'help': 'Display a visible icon for carriage return and line feeds',
     },
-)
 
-# Multiple-selection settings
-_combo_settings = (
-    {
+    # Color settings
+    'color': {
+        'label': 'Text color',
+        'type': 'color',
+    },
+    'paper': {
+        'label': 'Paper color',
+        'type': 'color',
+    },
+
+    # Numeric settings
+    'edgeColumn': {
+        'label': 'Text width',
+        'type': 'number',
+        'help': 'Number of characters per line before wrapping occurs',
+    },
+    'tabWidth': {
+        'label': 'Tab width',
+        'type': 'number',
+        'help': 'Width of tabs in characters, or the number of'
+            ' spaces to insert when tab is pressed',
+    },
+
+    # Multiple-selection settings
+    'braceMatching': {
         'label': 'Brace Matching',
-        'name': 'braceMatching',
+        'type': 'combo',
         'help': 'Whether and how to highlight matching {} [] () braces',
         'values': (
             ('None', 'NoBraceMatch'),
@@ -59,9 +80,9 @@ _combo_settings = (
             ('Sloppy', 'SloppyBraceMatch'),
         ),
     },
-    {
+    'edgeMode': {
         'label': 'Edge Mode',
-        'name': 'edgeMode',
+        'type': 'combo',
         'help': 'How the edge of the text width is indicated',
         'values': (
             ('None', 'EdgeNone'),
@@ -69,9 +90,9 @@ _combo_settings = (
             ('Background', 'EdgeBackground'),
         ),
     },
-    {
+    'eolMode': {
         'label': 'Line Endings',
-        'name': 'eolMode',
+        'type': 'combo',
         'help': 'End lines with carriage return and/or line feed',
         'values': (
             ('Windows (CR/LF)', 'EolWindows'),
@@ -79,9 +100,9 @@ _combo_settings = (
             ('Mac (CR)', 'EolMac'),
         ),
     },
-    {
+    'folding': {
         'label': 'Folding',
-        'name': 'folding',
+        'type': 'combo',
         'help': 'What kind of icons to display for code-folding',
         'values': (
             ('None', 'NoFoldStyle'),
@@ -92,9 +113,9 @@ _combo_settings = (
             ('Boxed Tree', 'BoxedTreeFoldStyle'),
         ),
     },
-    {
+    'whitespaceVisibility': {
         'label': 'Whitespace Visibility',
-        'name': 'whitespaceVisibility',
+        'type': 'combo',
         'help': 'Whether whitespace is indicated with visible markers',
         'values': (
             ('Invisible', 'WsInvisible'),
@@ -102,9 +123,9 @@ _combo_settings = (
             ('Visible After Indent', 'WsVisibleAfterIndent'),
         ),
     },
-    {
+    'wrapMode': {
         'label': 'Wrap Mode',
-        'name': 'wrapMode',
+        'type': 'combo',
         'help': 'How to wrap text when it reaches the text width',
         'values': (
             ('None', 'WrapNone'),
@@ -112,20 +133,26 @@ _combo_settings = (
             ('Character', 'WrapCharacter'),
         ),
     },
+
+    # TODO: Need a getter for this
+    # 'caretWidth': {
+        #'label': 'Caret width (pixels)',
+    #},
+
     # Stuff the user probably doesn't care about configuring
     # (or do you?)
-    #{
+    # 'annotationDisplay': {
         #'label': 'Annotation Display',
-        #'name': 'annotationDisplay',
+        #'type': 'combo',
         #'values': (
             #('Hidden', 'AnnotationHidden'),
             #('Standard', 'AnnotationStandard'),
             #('Boxed', 'AnnotationBoxed'),
         #),
     #},
-    #{
+    # 'autoCompletionSource': {
         #'label': 'Auto Completion Source',
-        #'name': 'autoCompletionSource',
+        #'type': 'combo',
         #'values': (
             #('None', 'AcsNone'),
             #('All', 'AcsAll'),
@@ -133,9 +160,9 @@ _combo_settings = (
             #('APIs', 'AcsAPIs'),
         #),
     #},
-    #{
+    # 'callTipsStyle': {
         #'label': 'Call Tips Style',
-        #'name': 'callTipsStyle',
+        #'type': 'combo',
         #'values': (
             #('None', 'CallTipsNone'),
             #('No Context', 'CallTipsNoContext'),
@@ -143,123 +170,84 @@ _combo_settings = (
             #('Context', 'CallTipsContext'),
         #),
     #},
+
+}
+
+# Setting groups
+_setting_groups = (
+    ('Colors',
+        (
+            'color',
+            'paper',
+        )
+    ),
+
+    ('Indentation',
+        (
+            'tabWidth',
+            'tabIndents',
+            'backspaceUnindents',
+            'autoIndent',
+            'indentationGuides',
+            'indentationsUseTabs',
+        )
+    ),
+
+    ('Text width',
+        (
+            'edgeMode',
+            'wrapMode',
+            'edgeColumn',
+        )
+    ),
+
+    ('Formatting',
+        (
+            'eolMode',
+            'eolVisibility',
+            'whitespaceVisibility',
+        )
+    ),
+
+    ('Coding aids',
+        (
+            'braceMatching',
+            'folding',
+        )
+    ),
 )
 
-# Custom foreground and background colors
-_color_settings = (
-    # Basic editor colors (no effect with lexer on)
-    {
-        'label': 'Text color',
-        'name': 'color',
-    },
-    {
-        'label': 'Paper color',
-        'name': 'paper',
-    },
-)
+
+# Write-only color settings.
+# FIXME: Can't effectively include these until getters are written.
 _other_color_settings = (
     # Selection
-    {
-        'label': 'Selection foreground color',
-        'set': 'setSelectionForegroundColor',
-    },
-    {
-        'label': 'Selection background color',
-        'set': 'setSelectionBackgroundColor',
-    },
+    'selectionForegroundColor',
+    'selectionBackgroundColor',
     # Caret (current line)
-    {
-        'label': 'Caret foreground color',
-        'set': 'setCaretForegroundColor',
-    },
-    {
-        'label': 'Caret background color',
-        'set': 'setCaretLineBackgroundColor',
-    },
+    'caretForegroundColor',
+    'caretLineBackgroundColor',
     # Edge marker
-    {
-        'label': 'Edge marker color',
-        'get': 'edgeColor',
-        'set': 'setEdgeColor',
-    },
+    'edgeColor',
     # Indentation guides
-    {
-        'label': '',
-        'set': 'setIndentationGuidesForegroundColor',
-    },
-    {
-        'label': '',
-        'set': 'setIndentationGuidesBackgroundColor',
-    },
+    'indentationGuidesForegroundColor',
+    'indentationGuidesBackgroundColor',
     # Brace matching
-    {
-        'label': '',
-        'set': 'setMatchedBraceForegroundColor',
-    },
-    {
-        'label': '',
-        'set': 'setMatchedBraceBackgroundColor',
-    },
-    {
-        'label': '',
-        'set': 'setUnmatchedBraceForegroundColor',
-    },
-    {
-        'label': '',
-        'set': 'setUnmatchedBraceBackgroundColor',
-    },
+    'matchedBraceForegroundColor',
+    'matchedBraceBackgroundColor',
+    'unmatchedBraceForegroundColor',
+    'unmatchedBraceBackgroundColor',
     # Marker colors
-    {
-        'label': '',
-        'set': 'setMarkerForegroundColor',
-    },
-    {
-        'label': '',
-        'set': 'setMarkerBackgroundColor',
-    },
+    'markerForegroundColor',
+    'markerBackgroundColor',
     # Margins
-    {
-        'label': '',
-        'set': 'setMarginsForegroundColor',
-    },
-    {
-        'label': '',
-        'set': 'setMarginsBackgroundColor',
-    },
+    'marginsForegroundColor',
+    'marginsBackgroundColor',
     # CallTips
-    {
-        'label': '',
-        'set': 'setCallTipsForegroundColor',
-    },
-    {
-        'label': '',
-        'set': 'setCallTipsBackgroundColor',
-    },
-    {
-        'label': '',
-        'set': 'setCallTipsHighlightColor',
-    },
+    'callTipsForegroundColor',
+    'callTipsBackgroundColor',
+    'callTipsHighlightColor',
 )
-
-_numeric_settings = (
-    # TODO: Need a getter for this
-    #{
-        #'label': 'Caret width (pixels)',
-        #'name': 'caretWidth',
-    #},
-    {
-        'label': 'Text width',
-        'name': 'edgeColumn',
-        'help': 'Number of characters per line before wrapping occurs',
-    },
-    {
-        'label': 'Tab width',
-        'name': 'tabWidth',
-        'help': 'Width of tabs in characters, or the number of'
-            ' spaces to insert when tab is pressed',
-    },
-)
-
 
 class PySciSettings (QtGui.QDialog):
     """A dialog window for configuring a QsciScintilla editor.
@@ -278,22 +266,30 @@ class PySciSettings (QtGui.QDialog):
         """
         layout = QtGui.QVBoxLayout()
 
-        # Checkboxes for each boolean setting
-        layout.addWidget(self._create_line_number_checkbox())
-        for bool_setting in _bool_settings:
-            layout.addWidget(self._create_checkbox(bool_setting))
+        for label, names in _setting_groups:
+            group_box = QtGui.QGroupBox(label)
+            group_layout = QtGui.QVBoxLayout()
+            for name in names:
+                group_layout.addLayout(self._create_widget(name))
+            group_box.setLayout(group_layout)
+            layout.addWidget(group_box)
 
-        # Comboboxes for each multi-select setting
-        for combo_setting in _combo_settings:
-            layout.addLayout(self._create_combobox(combo_setting))
+        ## Checkboxes for each boolean setting
+        #layout.addWidget(self._create_line_number_checkbox())
+        #for bool_setting in _bool_settings:
+            #layout.addWidget(self._create_checkbox(bool_setting))
 
-        # Color pickers for each color setting
-        for color_setting in _color_settings:
-            layout.addLayout(self._create_color_picker(color_setting))
+        ## Comboboxes for each multi-select setting
+        #for combo_setting in _combo_settings:
+            #layout.addLayout(self._create_combobox(combo_setting))
 
-        # Spinboxes for each numeric setting
-        for num_setting in _numeric_settings:
-            layout.addLayout(self._create_number_box(num_setting))
+        ## Color pickers for each color setting
+        #for color_setting in _color_settings:
+            #layout.addLayout(self._create_color_picker(color_setting))
+
+        ## Spinboxes for each numeric setting
+        #for num_setting in _numeric_settings:
+            #layout.addLayout(self._create_number_box(num_setting))
 
         # OK button
         ok = QtGui.QPushButton('OK', self)
@@ -303,28 +299,59 @@ class PySciSettings (QtGui.QDialog):
         return layout
 
 
-    def _create_checkbox(self, setting):
-        """Return a ``QCheckBox`` for the given setting,
-        with the event handler already connected.
+    def _create_widget(self, name):
+        """Return an appropriate widget for the given configuration setting.
         """
-        checkbox = QtGui.QCheckBox(setting['label'], self)
+        setting = _settings[name]
+        type_ = setting['type']
+
+        # Get the appropriate widget type
+        if type_ == 'bool':
+            widget = self._create_checkbox(name)
+        elif type_ == 'number':
+            widget = self._create_number_box(name)
+        elif type_ == 'combo':
+            widget = self._create_combobox(name)
+        elif type_ == 'color':
+            widget = self._create_color_picker(name)
+
+
+        # Label with possible tooltip
+        label = QtGui.QLabel(setting['label'])
+
+        # Add tooltip to widget
         if 'help' in setting:
-            checkbox.setToolTip(setting['help'])
+            widget.setToolTip(setting['help'])
+
+        # Add label and widget
+        layout = QtGui.QHBoxLayout()
+        layout.addWidget(label)
+        layout.addStretch(1)
+        layout.addWidget(widget)
+
+        return layout
+
+
+    def _create_checkbox(self, name):
+        """Return a ``QCheckBox`` for the given setting.
+        """
+        #setting = _settings[name]
+        checkbox = QtGui.QCheckBox(self)
 
         def checkbox_changed(state):
             """Event handler for the given setting.
             """
             if state == QtCore.Qt.Checked:
-                self.editor.set_config(setting['name'], True)
+                self.editor.set_config(name, True)
             elif state == QtCore.Qt.Unchecked:
-                self.editor.set_config(setting['name'], False)
+                self.editor.set_config(name, False)
 
         self.connect(checkbox,
             QtCore.SIGNAL('stateChanged(int)'),
             checkbox_changed)
 
         # Set the initial checkbox state based on current value
-        if self.editor.get_config(setting['name']):
+        if self.editor.get_config(name):
             checkbox.setCheckState(QtCore.Qt.Checked)
         else:
             checkbox.setCheckState(QtCore.Qt.Unchecked)
@@ -332,17 +359,15 @@ class PySciSettings (QtGui.QDialog):
         return checkbox
 
 
-    def _create_combobox(self, setting):
-        """Return a layout with a label and combobox for modifying a
-        multiple-value setting.
+    def _create_combobox(self, name):
+        """Return a combobox for modifying a multiple-value setting.
         """
+        setting = _settings[name]
         # Create the combobox and populate it
         combo = QtGui.QComboBox(self)
         for label, value in setting['values']:
             data = QtCore.QVariant(value)
             combo.addItem(label, data)
-        if 'help' in setting:
-            combo.setToolTip(setting['help'])
 
         # TODO: Set the initial value, if any
         # (This approach doesn't work due to string vs. int issues)
@@ -354,33 +379,30 @@ class PySciSettings (QtGui.QDialog):
         def combo_changed(index):
             data = combo.itemData(index)
             value = str(data.toString())
-            self.editor.set_config(setting['name'], value)
+            self.editor.set_config(name, value)
 
         # Connect event handler
         self.connect(combo,
             QtCore.SIGNAL('currentIndexChanged(int)'),
             combo_changed)
 
-        # Layout with label and combobox
-        layout = QtGui.QHBoxLayout()
-        layout.addWidget(QtGui.QLabel(setting['label']))
-        layout.addWidget(combo)
-
-        return layout
+        return combo
 
 
-    def _create_color_picker(self, setting):
+    def _create_color_picker(self, name):
         """Return a color-picker widget for a color-based setting.
         """
+        #setting = _settings[name]
+
         # Button with colored background
         button = QtGui.QPushButton()
 
         # Event handler
         def button_pressed():
-            current_color = self.editor.get_config(setting['name'])
+            current_color = self.editor.get_config(name)
             color = QtGui.QColorDialog.getColor(current_color)
             button.setStyleSheet("background-color: %s" % color.name())
-            self.editor.set_config(setting['name'], color)
+            self.editor.set_config(name, color)
 
         # Connect event handler
         self.connect(button,
@@ -388,41 +410,31 @@ class PySciSettings (QtGui.QDialog):
             button_pressed)
 
         # Set default background color
-        color = self.editor.get_config(setting['name'])
+        color = self.editor.get_config(name)
         button.setStyleSheet("background-color: %s" % color.name())
 
-        # Layout with label and color button
-        layout = QtGui.QHBoxLayout()
-        layout.addWidget(QtGui.QLabel(setting['label']))
-        layout.addWidget(button)
-
-        return layout
+        return button
 
 
-    def _create_number_box(self, setting):
+    def _create_number_box(self, name):
         """Return a numeric entry widget for a numeric setting.
         """
+        setting = _settings[name]
+
         spinbox = QtGui.QSpinBox()
-        if 'help' in setting:
-            spinbox.setToolTip(setting['help'])
 
         # Set initial value
-        spinbox.setValue(self.editor.get_config(setting['name']))
+        spinbox.setValue(self.editor.get_config(name))
 
         def spinbox_changed(value):
-            self.editor.set_config(setting['name'], value)
+            self.editor.set_config(name, value)
 
         # Connect event handler
         self.connect(spinbox,
             QtCore.SIGNAL('valueChanged(int)'),
             spinbox_changed)
 
-        # Layout with label and color button
-        layout = QtGui.QHBoxLayout()
-        layout.addWidget(QtGui.QLabel(setting['label']))
-        layout.addWidget(spinbox)
-
-        return layout
+        return spinbox
 
 
     def _create_line_number_checkbox(self):
