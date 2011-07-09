@@ -4,36 +4,15 @@ PySci
 This module attempts to provide a more Pythonic interface to the QsciScintilla_
 editor widget.
 
-.. _QsciScintilla: http://www.riverbankcomputing.co.uk/static/Docs/QScintilla2/classQsciScintilla.html
+Until PySci is officially released, you can install it from GitHub like so::
 
-
-Installation
------------------------
-
-To install::
-
-    $ python setup.py install
-
-or::
-
+    $ git clone git://github.com/wapcaplet/pysci.git
     $ pip install .
 
-Usage
------------------------
+PySci is released under the open-source `MIT License`.
 
-Here's a very simple PyQt4 application using the PySci editor widget::
-
-    from PyQt4 import QtGui
-    from pysci import PySci
-
-    if __name__ == '__main__':
-        app = QtGui.QApplication([])
-        editor = PySci()
-        editor.show()
-        app.exec_()
-
-See the ``demo.py`` file in the root of the repository for a more complete
-example, including the use of the ``PySciSettings`` configuration widget.
+.. _QsciScintilla: http://www.riverbankcomputing.co.uk/static/Docs/QScintilla2/classQsciScintilla.html
+.. _MIT License: http://www.opensource.org/licenses/mit-license.php
 
 
 Contents
@@ -43,11 +22,13 @@ Contents
     :maxdepth: 2
 
     motivation
+    usage
+    plans
     api/index
 
 
 Indices and tables
-==================
+-----------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
