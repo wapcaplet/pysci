@@ -31,7 +31,7 @@ _settings = {
         'help': 'Automatically indent text to match the preceding line',
     },
     'indentationGuides': {
-        'label': 'Show indentation guides',
+        'label': 'Indentation guides',
         'type': 'bool',
         'help': 'Display visible guidelines to help keep indentation consistent',
     },
@@ -41,7 +41,7 @@ _settings = {
         'help': 'Tab key inserts an actual tab character instead of spaces',
     },
     'eolVisibility': {
-        'label': 'Visible line endings',
+        'label': 'Show CR/LF',
         'type': 'bool',
         'help': 'Display a visible icon for carriage return and line feeds',
     },
@@ -95,9 +95,9 @@ _settings = {
         'type': 'combo',
         'help': 'End lines with carriage return and/or line feed',
         'values': (
-            ('Windows (CR/LF)', 'EolWindows'),
-            ('Unix (LF)', 'EolUnix'),
-            ('Mac (CR)', 'EolMac'),
+            ('Windows', 'EolWindows'),
+            ('Unix', 'EolUnix'),
+            ('Mac', 'EolMac'),
         ),
     },
     'folding': {
@@ -114,7 +114,7 @@ _settings = {
         ),
     },
     'whitespaceVisibility': {
-        'label': 'Whitespace Visibility',
+        'label': 'Whitespace',
         'type': 'combo',
         'help': 'Whether whitespace is indicated with visible markers',
         'values': (
@@ -193,7 +193,7 @@ _setting_groups = (
         )
     ),
 
-    ('Text width',
+    ('Wrapping',
         (
             'edgeMode',
             'wrapMode',
@@ -203,9 +203,9 @@ _setting_groups = (
 
     ('Formatting',
         (
+            'whitespaceVisibility',
             'eolMode',
             'eolVisibility',
-            'whitespaceVisibility',
         )
     ),
 
@@ -264,39 +264,44 @@ class PySciSettings (QtGui.QDialog):
     def _create_layout(self):
         """Create and return the main layout for the dialog widget.
         """
-        layout = QtGui.QVBoxLayout()
+        # Indexed group boxes, for easier rearrangement
+        groups = {}
 
+        # Create and populate each group
         for label, names in _setting_groups:
-            group_box = QtGui.QGroupBox(label)
+            groups[label] = QtGui.QGroupBox(label)
             group_layout = QtGui.QVBoxLayout()
             for name in names:
                 group_layout.addLayout(self._create_widget(name))
-            group_box.setLayout(group_layout)
-            layout.addWidget(group_box)
+            groups[label].setLayout(group_layout)
+            groups[label].setFlat(False)
 
-        ## Checkboxes for each boolean setting
-        #layout.addWidget(self._create_line_number_checkbox())
-        #for bool_setting in _bool_settings:
-            #layout.addWidget(self._create_checkbox(bool_setting))
+        # Create two columns
+        left_column = QtGui.QVBoxLayout()
+        left_column.addWidget(groups['Indentation'])
+        left_column.addWidget(groups['Wrapping'])
+        left_column.addStretch(1)
+        right_column = QtGui.QVBoxLayout()
+        right_column.addWidget(groups['Formatting'])
+        right_column.addWidget(groups['Colors'])
+        right_column.addWidget(groups['Coding aids'])
+        right_column.addStretch(1)
 
-        ## Comboboxes for each multi-select setting
-        #for combo_setting in _combo_settings:
-            #layout.addLayout(self._create_combobox(combo_setting))
+        # Arrange both columns side-by-side in the middle
+        columns_layout = QtGui.QHBoxLayout()
+        columns_layout.addLayout(left_column)
+        columns_layout.addLayout(right_column)
 
-        ## Color pickers for each color setting
-        #for color_setting in _color_settings:
-            #layout.addLayout(self._create_color_picker(color_setting))
+        # Layout columns section and OK button vertically
+        main_layout = QtGui.QVBoxLayout()
+        main_layout.addLayout(columns_layout)
 
-        ## Spinboxes for each numeric setting
-        #for num_setting in _numeric_settings:
-            #layout.addLayout(self._create_number_box(num_setting))
-
-        # OK button
+        # OK button at the bottom
         ok = QtGui.QPushButton('OK', self)
         self.connect(ok, QtCore.SIGNAL('clicked()'), self.accept)
-        layout.addWidget(ok)
+        main_layout.addWidget(ok)
 
-        return layout
+        return main_layout
 
 
     def _create_widget(self, name):
