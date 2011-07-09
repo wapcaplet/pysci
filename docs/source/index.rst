@@ -7,6 +7,7 @@ editor widget.
 Until PySci is officially released, you can install it from GitHub like so::
 
     $ git clone git://github.com/wapcaplet/pysci.git
+    $ cd pysci
     $ pip install .
 
 PySci is released under the open-source `MIT License`_.
