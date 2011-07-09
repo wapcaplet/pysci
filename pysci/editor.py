@@ -1,18 +1,6 @@
 # editor.py
 
 """Defines a QsciScintilla wrapper called `PySci`.
-
-Desirable features:
-
-    - Directly get/set attributes instead of using getters/setters
-      (in some cases, not even getters exist, for example 'marginsFont')
-      ex.: editor.font = ('Courier New', 10)
-
-Could use Qsci.QsciScintilla.SendScintilla() with predefined signals for things
-that aren't already implemented:
-
-    http://www.scintilla.org/ScintillaDoc.html
-
 """
 
 __all__ = [

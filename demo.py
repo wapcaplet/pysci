@@ -5,8 +5,8 @@
 """
 
 import sys
-from pysci.editor import PySci
-from pysci.config import EditorSettings
+from pysci import PySci
+from pysci import PySciSettings
 from PyQt4 import QtGui, QtCore
 
 class Demo (QtGui.QMainWindow):
@@ -36,7 +36,7 @@ class Demo (QtGui.QMainWindow):
     def configure(self):
         """Display the editor configuration window.
         """
-        settings = EditorSettings(self.editor)
+        settings = PySciSettings(self.editor)
         settings.exec_()
 
 
