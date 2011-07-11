@@ -18,7 +18,7 @@ class BadEnum (Exception):
 def enum_value(name):
     """Return the Qsci.QsciScintilla value for the given enumeration name.
     """
-    if name not in _enums:
+    if name not in enum_names:
         raise BadEnum(name)
     else:
         # Some officially documented enums don't work; catch them
@@ -33,13 +33,13 @@ def enum_help(name):
     """Return help text on the given enumeration name.
     """
     try:
-        return _enums[name]
+        return enum_names[name]
     except KeyError:
         raise BadEnum(name)
 
 
 # Enumerations
-_enums = {
+enum_names = {
     # auto-indentation styles
     'AiMaintain':
         """A line is automatically indented to match the previous line.""",

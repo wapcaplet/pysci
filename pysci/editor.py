@@ -12,8 +12,9 @@ try:
 except ImportError:
     print("Please install PyQt4.")
 
-from enums import enum_value
+from enums import enum_value, enum_names
 from util import bgr_int_to_rgb
+from language import guess_language
 
 
 class PySci (Qsci.QsciScintilla):
@@ -31,6 +32,8 @@ class PySci (Qsci.QsciScintilla):
         """Set default configuration settings.
         """
         self.configure(
+            language = 'None',
+
             # Flags and numeric values
             tabIndents = True,
             tabWidth = 4,
@@ -115,7 +118,8 @@ class PySci (Qsci.QsciScintilla):
                 setter(*args)
 
             # Convert strings to enum value
-            elif isinstance(args, (str, unicode)):
+            #elif isinstance(args, (str, unicode)):
+            elif args in enum_names:
                 setter(enum_value(args))
 
             # Single-argument setting
@@ -142,6 +146,73 @@ class PySci (Qsci.QsciScintilla):
         height = self.textHeight(line_number)
 
         return (x, y, width, height)
+
+
+    # Buffer content operations
+
+    def modified(self, set_modified=None):
+        """Get or set the modification status of the editor.
+        If ``set_modified`` is True or False, set the modification status;
+        otherwise, return current modification status (True or False).
+        """
+        if set_modified in (True, False):
+            self.setModified(set_modified)
+        else:
+            return self.isModified()
+
+
+    def clear(self):
+        """Clear the contents of the editor.
+        """
+        self.setText('')
+        self.modified(False)
+
+
+    def load(self, filename):
+        """Load the given file into the editor.
+        """
+        infile = open(filename, 'r')
+        self.setText(''.join(infile.readlines()))
+        self.modified(False)
+        self.setLanguage(guess_language(filename))
+
+
+    def save(self, filename):
+        """Save the editor contents to the given filename.
+        """
+        outfile = open(filename, 'w')
+        outfile.write(self.text())
+        self.modified(False)
+
+        QtGui.QMessageBox.information(self, 'Success', 'Saved: "%s"' % filename)
+
+
+    # Language and syntax highlighting
+    # Note: These follow the getter/setter pattern of other
+    # QsciScintilla settings, to allow `configure` to manipulate them.
+
+    def language(self):
+        """Getter for language.
+        """
+        lexer = self.lexer()
+        if lexer:
+            return lexer.language()
+        else:
+            return 'None'
+
+
+    def setLanguage(self, language):
+        """Set syntax highlighting to the given language.
+        """
+        if language == 'None':
+            print("Disabling syntax highlighting")
+            lexer = None
+        else:
+            print("%s syntax highlighting" % language)
+            lexer = getattr(Qsci, 'QsciLexer%s' % language)()
+            lexer.setFont(self.font())
+
+        self.setLexer(lexer)
 
 
     ###

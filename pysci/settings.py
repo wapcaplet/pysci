@@ -12,6 +12,7 @@ try:
 except ImportError:
     print("Please insteall PyQt4.")
 
+from language import language_extensions
 
 _settings = {
     # Boolean settings
@@ -133,6 +134,14 @@ _settings = {
             ('Character', 'WrapCharacter'),
         ),
     },
+    'language': {
+        'label': 'Language',
+        'type': 'combo',
+        'help': 'Syntax highlighting language',
+        'values': [
+            (lang, lang) for (lang, ext) in language_extensions
+        ],
+    },
 
     # TODO: Need a getter for this
     # 'caretWidth': {
@@ -211,8 +220,9 @@ _setting_groups = (
 
     ('Coding aids',
         (
-            'braceMatching',
+            'language',
             'folding',
+            'braceMatching',
         )
     ),
 )
@@ -340,7 +350,6 @@ class PySciSettings (QtGui.QDialog):
     def _create_checkbox(self, name):
         """Return a ``QCheckBox`` for the given setting.
         """
-        #setting = _settings[name]
         checkbox = QtGui.QCheckBox(self)
 
         def checkbox_changed(state):
@@ -397,8 +406,6 @@ class PySciSettings (QtGui.QDialog):
     def _create_color_picker(self, name):
         """Return a color-picker widget for a color-based setting.
         """
-        #setting = _settings[name]
-
         # Button with colored background
         button = QtGui.QPushButton()
 
@@ -424,8 +431,6 @@ class PySciSettings (QtGui.QDialog):
     def _create_number_box(self, name):
         """Return a numeric entry widget for a numeric setting.
         """
-        setting = _settings[name]
-
         spinbox = QtGui.QSpinBox()
 
         # Set initial value
