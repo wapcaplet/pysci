@@ -7,7 +7,7 @@ class PySciSettingsTest (TestCase):
     """Test the PySciSettings widget.
     """
     def test_instantiation(self):
-        """Instantiate an PySciSettings widget.
+        """PySciSettings widget can be instantiated.
         """
         self.app = QtGui.QApplication(['-nograb', '-sync'])
         self.editor = PySci()

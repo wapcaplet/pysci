@@ -38,7 +38,7 @@ class PySciConfigTest (PySciTest):
 
 
     def test_get_set_config(self):
-        """The `get_config` and `set_config` methods work correctly.
+        """get_config() returns the value set by set_config().
         """
         self.editor.set_config('indentationsUseTabs', True)
         self.assertEqual(self.editor.get_config('indentationsUseTabs'), True)
@@ -250,7 +250,7 @@ class PySciBufferTest (PySciTest):
     """Test PySci buffer methods.
     """
     def test_modified_get(self):
-        """The `modified` method correctly retrieves the isModified flag.
+        """modified() retrieves the isModified flag.
         """
         self.editor.setText('hello')
         self.editor.setModified(True)
@@ -260,7 +260,7 @@ class PySciBufferTest (PySciTest):
 
 
     def test_modified_set(self):
-        """The `modified` method correctly sets the isModified flag.
+        """modified(flag) sets the isModified flag.
         """
         self.editor.setText('hello')
         self.editor.modified(True)
@@ -270,7 +270,7 @@ class PySciBufferTest (PySciTest):
 
 
     def test_clear(self):
-        """The `clear` method correctly empties the buffer.
+        """clear() empties the buffer.
         """
         self.editor.setText('hello')
         self.assertEqual(self.editor.text(), 'hello')
@@ -281,10 +281,16 @@ class PySciBufferTest (PySciTest):
 class PySciLanguageTest (PySciTest):
     """Test PySci language methods.
     """
-    def test_language(self):
-        """The `language` and `setLanguage` methods work.
+    def test_default_language(self):
+        """New editors initially have no syntax highlighting defined.
         """
         self.assertEqual(self.editor.language(), 'None')
+        self.assertEqual(self.editor.lexer(), None)
+
+
+    def test_get_set_language(self):
+        """language() returns the value set by setLanguage().
+        """
         self.editor.setLanguage('Python')
         self.assertEqual(self.editor.language(), 'Python')
         self.editor.setLanguage('Ruby')
@@ -293,10 +299,39 @@ class PySciLanguageTest (PySciTest):
         self.assertEqual(self.editor.language(), 'JavaScript')
 
 
-    def test_invalid_language(self):
-        """The `setLanguage` method raises an exception on invalid language.
+    def test_language_lexer(self):
+        """setLanguage() sets the correct lexer.
         """
+        self.editor.setLanguage('Python')
+        lexer_class = self.editor.lexer().__class__.__name__
+        self.assertEqual(lexer_class, 'QsciLexerPython')
+
+        self.editor.setLanguage('Ruby')
+        lexer_class = self.editor.lexer().__class__.__name__
+        self.assertEqual(lexer_class, 'QsciLexerRuby')
+
+
+    def test_no_language_lexer(self):
+        """setLanguage() can be used to disable the lexer.
+        """
+        self.editor.setLanguage(None)
+        lexer = self.editor.lexer()
+        self.assertEqual(lexer, None)
+
+        self.editor.setLanguage('None')
+        lexer = self.editor.lexer()
+        self.assertEqual(lexer, None)
+
+        self.editor.setLanguage('')
+        lexer = self.editor.lexer()
+        self.assertEqual(lexer, None)
+
+
+    def test_invalid_language(self):
+        """setLanguage() raises an exception on invalid language name.
+        """
+        self.assertRaises(ValueError, self.editor.setLanguage, 'Z++')
         self.assertRaises(ValueError, self.editor.setLanguage, 'Bogus')
-        self.assertRaises(ValueError, self.editor.setLanguage, '')
+        self.assertRaises(ValueError, self.editor.setLanguage, 'NoSuchLanguage')
 
 
