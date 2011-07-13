@@ -209,7 +209,10 @@ class PySci (Qsci.QsciScintilla):
             lexer = None
         else:
             print("%s syntax highlighting" % language)
-            lexer = getattr(Qsci, 'QsciLexer%s' % language)()
+            try:
+                lexer = getattr(Qsci, 'QsciLexer%s' % language)(self)
+            except AttributeError:
+                raise ValueError("Unknown language: %s" % language)
             lexer.setFont(self.font())
 
         self.setLexer(lexer)

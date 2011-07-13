@@ -2,17 +2,49 @@ from pysci.editor import PySci
 from unittest import TestCase
 from PyQt4 import QtGui, Qsci
 
+"""
+Might be able to glean something from this:
+    http://www.commandprompt.com/community/pyqt/x5255
+
+QTestLib manual (C++ oriented):
+    http://doc.qt.nokia.com/4.7-snapshot/qtestlib-manual.html
+
+Also, some potential insight here:
+    http://nullege.com/codes/show/src%40g%40w%40gws-HEAD%40trunk%40tests%40frame.py/56/PyQt4.QtTest.QTest.keyClick/python
+"""
+
 class PySciTest (TestCase):
-    """Test the PySci widget.
-    """
     def setUp(self):
         self.app = QtGui.QApplication(['-nograb', '-sync'])
         self.editor = PySci()
-        #self.editor.show()
-        #self.app.exec_() # Don't call this, or nose will hang
+
 
     def tearDown(self):
         self.app.quit()
+
+
+
+class PySciConfigTest (PySciTest):
+    """Test PySci configuration features
+    """
+    def assertColorsEqual(self, color_a, color_b):
+        """Assert that the two colors have the same name
+        (even if they are not the same QColor object).
+        """
+        self.assertEqual(
+            str(color_a.name()),
+            str(color_b.name()),
+        )
+
+
+    def test_get_set_config(self):
+        """The `get_config` and `set_config` methods work correctly.
+        """
+        self.editor.set_config('indentationsUseTabs', True)
+        self.assertEqual(self.editor.get_config('indentationsUseTabs'), True)
+        self.editor.set_config('tabWidth', 3)
+        self.assertEqual(self.editor.get_config('tabWidth'), 3)
+
 
     def test_boolean_configuration(self):
         """Basic configuration settings are applied.
@@ -94,13 +126,6 @@ class PySciTest (TestCase):
         )
 
         self.assertEqual(self.editor.font(), courier)
-
-
-    def assertColorsEqual(self, color_a, color_b):
-        self.assertEqual(
-            str(color_a.name()),
-            str(color_b.name()),
-        )
 
 
     def test_color_configuration(self):
@@ -210,10 +235,68 @@ class PySciTest (TestCase):
         self.assertEqual(self.editor.wrapMode(), ENUM.WrapWord)
 
 
+class PySciGeometryTest (PySciTest):
+    """Test PySci geometry methods.
+    """
     def test_line_rect(self):
         """Line geometry rectangle is correctly calculated.
         """
         self.editor.setText("Hello world")
         rect = self.editor.line_rect(0)
         self.assertEqual(rect, (62, 0, 88, 16))
+
+
+class PySciBufferTest (PySciTest):
+    """Test PySci buffer methods.
+    """
+    def test_modified_get(self):
+        """The `modified` method correctly retrieves the isModified flag.
+        """
+        self.editor.setText('hello')
+        self.editor.setModified(True)
+        self.assertEqual(self.editor.modified(), True)
+        self.editor.setModified(False)
+        self.assertEqual(self.editor.modified(), False)
+
+
+    def test_modified_set(self):
+        """The `modified` method correctly sets the isModified flag.
+        """
+        self.editor.setText('hello')
+        self.editor.modified(True)
+        self.assertEqual(self.editor.isModified(), True)
+        self.editor.modified(False)
+        self.assertEqual(self.editor.isModified(), False)
+
+
+    def test_clear(self):
+        """The `clear` method correctly empties the buffer.
+        """
+        self.editor.setText('hello')
+        self.assertEqual(self.editor.text(), 'hello')
+        self.editor.clear()
+        self.assertEqual(self.editor.text(), '')
+
+
+class PySciLanguageTest (PySciTest):
+    """Test PySci language methods.
+    """
+    def test_language(self):
+        """The `language` and `setLanguage` methods work.
+        """
+        self.assertEqual(self.editor.language(), 'None')
+        self.editor.setLanguage('Python')
+        self.assertEqual(self.editor.language(), 'Python')
+        self.editor.setLanguage('Ruby')
+        self.assertEqual(self.editor.language(), 'Ruby')
+        self.editor.setLanguage('JavaScript')
+        self.assertEqual(self.editor.language(), 'JavaScript')
+
+
+    def test_invalid_language(self):
+        """The `setLanguage` method raises an exception on invalid language.
+        """
+        self.assertRaises(ValueError, self.editor.setLanguage, 'Bogus')
+        self.assertRaises(ValueError, self.editor.setLanguage, '')
+
 
