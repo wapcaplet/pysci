@@ -1,4 +1,4 @@
-from pysci.enums import enum_value, enum_help, BadEnum
+from pysci.enums import enum_value, enum_string, BadEnum
 from unittest import TestCase
 from PyQt4 import Qsci
 
@@ -11,23 +11,20 @@ class EnumTest (TestCase):
         self.assertEqual(enum_value('TextMargin'), QS.TextMargin)
 
 
-    def test_enum_help(self):
-        """Get help text for an enumeration name.
+    def test_enum_string(self):
+        """Convert enumeration value to string name.
         """
-        self.assertEqual(
-            enum_help('AiMaintain'),
-            "A line is automatically indented to match the previous line.")
-        self.assertEqual(
-            enum_help('AnnotationHidden'),
-            "Annotations are not displayed.")
+        QS = Qsci.QsciScintilla
+        self.assertEqual(enum_string(QS.WsInvisible), 'WsInvisible')
+        self.assertEqual(enum_string(QS.TextMargin), 'TextMargin')
 
 
-    def test_bad_enum(self):
-        """Raise exception on bad enumeration name.
+    def test_bad_enum_name(self):
+        """Raise exception on bad enumeration name or value.
         """
         self.assertRaises(BadEnum, enum_value, 'NoSuchEnum')
         self.assertRaises(BadEnum, enum_value, '')
-        self.assertRaises(BadEnum, enum_help, 'NoSuchEnum')
-        self.assertRaises(BadEnum, enum_help, '')
+        self.assertRaises(BadEnum, enum_string, 0)
+        self.assertRaises(BadEnum, enum_string, 1)
 
 
