@@ -46,6 +46,25 @@ class PySciConfigTest (PySciTest):
         self.assertEqual(self.editor.get_config('tabWidth'), 3)
 
 
+    def test_get_enumerated_config(self):
+        """get_config() returns strings for enumerated settings.
+        """
+        self.editor.configure(
+            whitespaceVisibility = 'WsInvisible',
+            edgeMode = 'EdgeNone',
+            braceMatching = 'SloppyBraceMatch',
+            folding = 'NoFoldStyle',
+            wrapMode = 'WrapWord',
+        )
+
+        get = self.editor.get_config
+        self.assertEqual(get('whitespaceVisibility'), 'WsInvisible')
+        self.assertEqual(get('edgeMode'), 'EdgeNone')
+        self.assertEqual(get('braceMatching'), 'SloppyBraceMatch')
+        self.assertEqual(get('folding'), 'NoFoldStyle')
+        self.assertEqual(get('wrapMode'), 'WrapWord')
+
+
     def test_boolean_configuration(self):
         """Basic configuration settings are applied.
         """

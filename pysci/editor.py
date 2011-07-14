@@ -12,7 +12,7 @@ try:
 except ImportError:
     print("Please install PyQt4.")
 
-from enums import enum_value, enum_names
+from enums import enum_value, enum_string, enum_names, BadEnum
 from util import bgr_int_to_rgb
 from language import guess_language
 
@@ -76,9 +76,15 @@ class PySci (Qsci.QsciScintilla):
 
     def get_config(self, name, *args):
         """Return the current configuration setting for attribute ``name``.
+        If ``name`` refers to an enumerated setting, return the string version
+        of that enumeration.
         """
         getter = getattr(self, name)
-        return getter(*args)
+        value = getter(*args)
+        try:
+            return enum_string(value)
+        except BadEnum:
+            return value
 
 
     def set_config(self, name, value):
@@ -118,7 +124,6 @@ class PySci (Qsci.QsciScintilla):
                 setter(*args)
 
             # Convert strings to enum value
-            #elif isinstance(args, (str, unicode)):
             elif args in enum_names:
                 setter(enum_value(args))
 

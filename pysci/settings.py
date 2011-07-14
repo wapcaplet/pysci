@@ -383,14 +383,10 @@ class PySciSettings (QtGui.QDialog):
             data = QtCore.QVariant(value)
             combo.addItem(label, data)
 
-        print("%s:" % name)
-        print(self.editor.get_config(name).__class__.__name__)
-
-        # TODO: Set the initial value, if any
-        # (This approach doesn't work due to string vs. int issues)
-        #current = self.editor.get_config(setting['name'])
-        #index = combo.findData(current)
-        #combo.setCurrentIndex(index)
+        # Set the initial value, if any
+        current = self.editor.get_config(name)
+        index = combo.findData(current)
+        combo.setCurrentIndex(index)
 
         # Ugly event handler!
         def combo_changed(index):
