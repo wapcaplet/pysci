@@ -12,7 +12,7 @@ try:
 except ImportError:
     print("Please install PyQt4.")
 
-from enums import enum_value, enum_string, enum_names, BadEnum
+from enums import enum_string, enum_values, BadEnum
 from util import bgr_int_to_rgb
 from language import guess_language
 
@@ -124,8 +124,8 @@ class PySci (Qsci.QsciScintilla):
                 setter(*args)
 
             # Convert strings to enum value
-            elif args in enum_names:
-                setter(enum_value(args))
+            elif args in enum_values:
+                setter(enum_values[args])
 
             # Single-argument setting
             else:

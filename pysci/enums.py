@@ -133,11 +133,11 @@ enum_types = {
 }
 
 # Just the enumeration names (strings)
-enum_names = [
-    name
+enum_values = dict(
+    (name, value)
     for name_values in enum_types.values()
     for (name, value) in name_values
-]
+)
 
 class BadEnum (Exception):
     """Bad (unknown or failed) enumeration name.
@@ -149,15 +149,10 @@ class BadEnum (Exception):
 def enum_value(enum_name):
     """Return the Qsci.QsciScintilla value for the given enumeration name.
     """
-    if enum_name not in enum_names:
-        raise BadEnum(name)
-
-    # Some officially documented enums don't work; catch them
-    # and raise BadEnum instead of KeyError
-    try:
-        return Qsci.QsciScintilla.__dict__[enum_name]
-    except KeyError:
-        raise BadEnum(name)
+    if enum_name not in enum_values:
+        raise BadEnum(enum_name)
+    else:
+        return enum_values[enum_name]
 
 
 def enum_string(enum_value):
