@@ -73,7 +73,7 @@ Settings Widget
 Considering the enormous number of methods in QsciScintilla for dealing with
 configuration settings, it's a little surprising that a dedicated configuration
 widget is not provided. If you've worked with QsciScintilla with any seriousness,
-you've probably build an ad-hoc configuration widget yourself (and so has
+you've probably built an ad-hoc configuration widget yourself (and so has
 everyone else). That's a shameful duplication of programming effort. PySci
 provides a ready-made one called ``PySciSettings`` to save you the trouble.
 
